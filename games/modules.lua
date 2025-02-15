@@ -74,7 +74,7 @@ run(function()
 		return true
 	end
 	local Slowmode = {Value = 2}
-	GodMode = vape.Categories.Modules:CreateModule({
+	GodMode = vape.Categories.Blatant:CreateModule({
 		Name = "AntiHit",
 		Function = function(callback)
 			if callback then
