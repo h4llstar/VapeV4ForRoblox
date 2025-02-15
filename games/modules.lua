@@ -62,6 +62,115 @@ local targetinfo = vape.Libraries.targetinfo
 local getfontsize = vape.Libraries.getfontsize
 local getcustomasset = vape.Libraries.getcustomasset
 
+
+local function placeModelUnderLeg()
+    local player = playersService.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+ 
+    if humanoidRootPart then
+        local assetsFolder = replicatedStorage:FindFirstChild("Assets")
+        if assetsFolder then
+            local effectsFolder = assetsFolder:FindFirstChild("Effects")
+            if effectsFolder then
+                local modelTemplate = effectsFolder:FindFirstChild("NightmareEmote")
+                if modelTemplate and modelTemplate:IsA("Model") then
+                    local clonedModel = modelTemplate:Clone()
+                    clonedModel.Parent = workspace
+ 
+                    if clonedModel.PrimaryPart then
+                        clonedModel:SetPrimaryPartCFrame(humanoidRootPart.CFrame - Vector3.new(0, 3, 0))
+                    else
+                        warn("PrimaryPart not set for NightmareEmote model!")
+                        return
+                    end
+ 
+                    spinParts(clonedModel)
+                    activeModel = clonedModel
+                else
+                    warn("NightmareEmote model not found or is not a valid model!")
+                end
+            else
+                warn("Effects folder not found in Assets!")
+            end
+        else
+            warn("Assets folder not found in ReplicatedStorage!")
+        end
+    else
+        warn("HumanoidRootPart not found in character!")
+    end
+end
+ 
+local function playAnimation(animationId)
+    local player = playersService.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChild("Humanoid")
+ 
+    if humanoid then
+        local animator = humanoid:FindFirstChild("Animator") or Instance.new("Animator", humanoid)
+        local animation = Instance.new("Animation")
+        animation.AnimationId = animationId
+        activeAnimationTrack = animator:LoadAnimation(animation)
+        activeAnimationTrack:Play()
+    else
+        warn("Humanoid not found in character!")
+    end
+end
+ 
+local function stopEffects()
+    for _, tween in ipairs(activeTweens) do
+        tween:Cancel()
+    end
+    activeTweens = {}
+ 
+    if activeAnimationTrack then
+        activeAnimationTrack:Stop()
+        activeAnimationTrack = nil
+    end
+ 
+    if activeModel then
+        activeModel:Destroy()
+        activeModel = nil
+    end
+ 
+    emoteActive = false
+end
+ 
+local function monitorWalking()
+    local player = playersService.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChild("Humanoid")
+ 
+    if humanoid then
+        humanoid.Running:Connect(function(speed)
+            if speed > 0 and emoteActive then
+                stopEffects()
+            end
+        end)
+    else
+        warn("Humanoid not found in character!")
+    end
+end
+ 
+local function activateNightmareEmote()
+    if emoteActive then
+        return
+    end
+ 
+    emoteActive = true
+    local success, err = pcall(function()
+        monitorWalking()
+        placeModelUnderLeg()
+        playAnimation("rbxassetid://9191822700")
+    end)
+ 
+    if not success then
+        warn("Error occurred: " .. tostring(err))
+        emoteActive = false
+    end
+end
+
+
 InfiniteJump = vape.Categories.Blatant:CreateModule({
     Name = "InfiniteJump",
     Function = function(callback)
@@ -304,3 +413,18 @@ run(function()
 		HoverText = "best paid autowin 2023!1!!! rel11!11!1"
 	})
 end)				
+
+
+run(function()
+    local NightmareEventButton
+    NightmareEventButton = vape.Categories.Modules:CreateModule({
+        Name = "Nightmare Emote",
+        Description = "Play Nightmare Emote",
+        Function = function(callback)
+            if callback then
+                NightmareEventButton:Toggle(false)
+                activateNightmareEmote()
+            end
+        end
+    })
+					
