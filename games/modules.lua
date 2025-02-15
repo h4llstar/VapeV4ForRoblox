@@ -417,7 +417,7 @@ end)
 
 run(function()
     local NightmareEventButton
-    NightmareEventButton = vape.Categories.Modules:CreateModule({
+    NightmareEventButton = vape.Categories.Render:CreateModule({
         Name = "Nightmare Emote",
         Description = "Play Nightmare Emote",
         Function = function(callback)
