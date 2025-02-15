@@ -62,3 +62,131 @@ local targetinfo = vape.Libraries.targetinfo
 local getfontsize = vape.Libraries.getfontsize
 local getcustomasset = vape.Libraries.getcustomasset
 
+InfiniteJump = vape.Categories.Blatant:CreateModule({
+    Name = "InfiniteJump",
+    Function = function(callback)
+        if callback then
+            local UserInputService = game:GetService("UserInputService")
+            local player = game.Players.LocalPlayer
+            local function setupInfiniteJump()
+                local character = player.Character or player.CharacterAdded:Wait()
+                local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+                UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                    if gameProcessed then return end
+                    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.Space then
+                        while UserInputService:IsKeyDown(Enum.KeyCode.Space) do
+                            humanoidRootPart.Velocity = Vector3.new(humanoidRootPart.Velocity.X, Velocity.Value, humanoidRootPart.Velocity.Z)
+                            wait()
+                        end
+                    end
+                end)
+            end
+            player.CharacterAdded:Connect(setupInfiniteJump)
+            if player.Character then
+                setupInfiniteJump()
+            end
+        end
+    end,
+    Tooltip = "Allows infinite jumping"
+})
+Velocity = InfiniteJump:CreateSlider({
+    Name = 'Velocity',
+    Min = 50,
+    Max = 300,
+    Default = 50
+})
+
+FPSUnlocker = vape.Categories.Utility:CreateModule({
+    Name = "FPSUnlocker",
+    Function = function(callback)
+        if callback then
+			setfpscap(99999999)
+        end
+    end,
+    Tooltip = "Insanly Simple fps unlocker"
+})
+
+local BedTP
+BedTP = vape.Categories.Blatant:CreateModule({
+    Name = "BedTP",
+    Description = "Teleports to enemy beds",
+    Function = function(callback)
+        if callback then
+			BedTP:Toggle(false)
+			local collection = game:GetService('CollectionService') :: CollectionService;
+			local lplr = game.Players.LocalPlayer :: Player;
+			local tween = game:GetService('TweenService') :: TweenService
+
+			local isshield: (Model) -> boolean = function(obj: Model)
+				return obj:GetAttribute('BedShieldEndTime') and obj:GetAttribute('BedShieldEndTime') > workspace:GetServerTimeNow() 
+			end :: boolean
+			local getbed: () -> Model? = function()
+				for i: number, v: Model? in collection:GetTagged('bed') do
+					if not isshield(v) and v.Bed.BrickColor ~= lplr.TeamColor then
+						return v;
+					end;
+				end;
+			end :: Model?;
+			
+			local bed = getbed() :: Model?;
+			assert(bed, 'lmao');
+			pcall(function()
+				lplr.Character.Humanoid.Health = 0
+			end)
+			local con;
+			con = lplr.CharacterAdded:Connect(function(v)
+				con:Disconnect();
+				task.wait(0.2)
+				tween:Create(v.PrimaryPart, TweenInfo.new(0.75), {CFrame = bed.Bed.CFrame + Vector3.new(0, 6, 0)}):Play();
+			end);
+        end
+    end
+})
+
+local PlayerTP
+PlayerTP = vape.Categories.Blatant:CreateModule({
+    Name = "PlayerTP",
+    Description = "Teleports you to the nearest player",
+    Function = function(callback)
+        if callback then
+			PlayerTP:Toggle(false)
+			local Players = game:GetService("Players")
+			local TweenService = game:GetService("TweenService")
+			local LocalPlayer = Players.LocalPlayer
+			
+			local getClosestEnemy = function()
+				local closestPlayer = nil
+				local closestDistance = math.huge
+			
+				for _, player in ipairs(Players:GetPlayers()) do
+					if player ~= LocalPlayer and player.TeamColor ~= LocalPlayer.TeamColor and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+						local distance = (player.Character.HumanoidRootPart.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+						if distance < closestDistance then
+							closestDistance = distance
+							closestPlayer = player
+						end
+					end
+				end
+			
+				return closestPlayer
+			end
+			
+			local targetPlayer = getClosestEnemy()
+			assert(targetPlayer, "No enemy players found!")
+			
+			pcall(function()
+				LocalPlayer.Character.Humanoid.Health = 0
+			end)
+			
+			local connection
+			connection = LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+				connection:Disconnect()
+				task.wait(0.2)
+			
+				local targetPosition = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0)
+				TweenService:Create(newCharacter.PrimaryPart, TweenInfo.new(0.85), {CFrame = targetPosition}):Play()
+			end)
+        end
+    end
+})
+
