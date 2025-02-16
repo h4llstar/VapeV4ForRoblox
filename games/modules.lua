@@ -62,6 +62,126 @@ local targetinfo = vape.Libraries.targetinfo
 local getfontsize = vape.Libraries.getfontsize
 local getcustomasset = vape.Libraries.getcustomasset
 
+	bedtable = {},
+	Tweening = false
+}
+
+local function GetEnumItems(enum)
+	local fonts = {}
+	for i,v in next, Enum[enum]:GetEnumItems() do 
+		table.insert(fonts, v.Name) 
+	end
+	return fonts
+end
+
+local isAlive = function(plr, healthblacklist)
+	plr = plr or lplr
+	local alive = false 
+	if plr.Character and plr.Character.PrimaryPart and plr.Character:FindFirstChild("HumanoidRootPart") and plr.Character:FindFirstChild("Humanoid") and plr.Character:FindFirstChild("Head") then 
+		alive = true
+	end
+	if not healthblacklist and alive and plr.Character.Humanoid.Health and plr.Character.Humanoid.Health <= 0 then 
+		alive = false
+	end
+	return alive
+end
+local function GetMagnitudeOf2Objects(part, part2, bypass)
+	local magnitude, partcount = 0, 0
+	if not bypass then 
+		local suc, res = pcall(function() return part.Position end)
+		partcount = suc and partcount + 1 or partcount
+		suc, res = pcall(function() return part2.Position end)
+		partcount = suc and partcount + 1 or partcount
+	end
+	if partcount > 1 or bypass then 
+		magnitude = bypass and (part - part2).magnitude or (part.Position - part2.Position).magnitude
+	end
+	return magnitude
+end
+local function GetTopBlock(position, smart, raycast, customvector)
+	position = position or isAlive(lplr, true) and lplr.Character:WaitForChild("HumanoidRootPart").Position
+	if not position then 
+		return nil 
+	end
+	if raycast and not game.Workspace:Raycast(position, Vector3.new(0, -2000, 0), store.blockRaycast) then
+	    return nil
+    end
+	local lastblock = nil
+	for i = 1, 500 do 
+		local newray = game.Workspace:Raycast(lastblock and lastblock.Position or position, customvector or Vector3.new(0.55, 999999, 0.55), store.blockRaycast)
+		local smartest = newray and smart and game.Workspace:Raycast(lastblock and lastblock.Position or position, Vector3.new(0, 5.5, 0), store.blockRaycast) or not smart
+		if newray and smartest then
+			lastblock = newray
+		else
+			break
+		end
+	end
+	return lastblock
+end
+local function FindEnemyBed(maxdistance, highest)
+	local target = nil
+	local distance = maxdistance or math.huge
+	local whitelistuserteams = {}
+	local badbeds = {}
+	if not lplr:GetAttribute("Team") then return nil end
+	for i,v in pairs(playersService:GetPlayers()) do
+		if v ~= lplr then
+			local type, attackable = vape.Libraries.whitelist:get(v)
+			if not attackable then
+				whitelistuserteams[v:GetAttribute("Team")] = true
+			end
+		end
+	end
+	for i,v in pairs(collectionService:GetTagged("bed")) do
+			local bedteamstring = string.split(v:GetAttribute("id"), "_")[1]
+			if whitelistuserteams[bedteamstring] ~= nil then
+			   badbeds[v] = true
+		    end
+	    end
+	for i,v in pairs(collectionService:GetTagged("bed")) do
+		if v:GetAttribute("id") and v:GetAttribute("id") ~= lplr:GetAttribute("Team").."_bed" and badbeds[v] == nil and lplr.Character and lplr.Character.PrimaryPart then
+			if v:GetAttribute("NoBreak") or v:GetAttribute("PlacedByUserId") and v:GetAttribute("PlacedByUserId") ~= 0 then continue end
+			local magdist = GetMagnitudeOf2Objects(lplr.Character.PrimaryPart, v)
+			if magdist < distance then
+				target = v
+				distance = magdist
+			end
+		end
+	end
+	local coveredblock = highest and target and GetTopBlock(target.Position, true)
+	if coveredblock then
+		target = coveredblock.Instance
+	end
+	for i,v in pairs(game:GetService("Teams"):GetTeams()) do
+		if target and v.TeamColor == target.Bed.BrickColor then
+			XStore.bedtable[target] = v.Name
+		end
+	end
+	return target
+end
+local function FindTeamBed()
+	local bedstate, res = pcall(function()
+		return lplr.leaderstats.Bed.Value
+	end)
+	return bedstate and res and res ~= nil and res == "✅"
+end
+local function FindItemDrop(item)
+	local itemdist = nil
+	local dist = math.huge
+	local function abletocalculate() return lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") end
+    for i,v in pairs(collectionService:GetTagged("ItemDrop")) do
+		if v and v.Name == item and abletocalculate() then
+			local itemdistance = GetMagnitudeOf2Objects(lplr.Character:WaitForChild("HumanoidRootPart"), v)
+			if itemdistance < dist then
+			itemdist = v
+			dist = itemdistance
+		end
+		end
+	end
+	return itemdist
+end
+
+
 
 
 InfiniteJump = vape.Categories.Blatant:CreateModule({
