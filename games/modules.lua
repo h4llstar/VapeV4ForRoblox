@@ -450,3 +450,73 @@ run(function()
 			end
 		})
 	end)
+
+
+run(function()
+	local WhisperAura = {Enabled = false}
+	local WhisperRange = {Value = 100}
+	local WhisperTask
+	local lplr = game:GetService("Players").LocalPlayer
+	local function getServerOwl()
+		return game.Workspace:FindFirstChild("ServerOwl")
+	end
+	local function getPlayerFromUserId(userId)
+		for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+			if v.UserId == userId then return v end
+		end
+	end
+	local function attack(plr)
+		local suc, res = pcall(function()
+			if (not plr) then return warn("[WhisperAura | attack]: Player not specified!") end
+			local targetPosition = plr.Character.HumanoidRootPart.Position
+			local direction = (targetPosition - lplr.Character.HumanoidRootPart.Position).unit
+			local ProjectileRefId = game:GetService("HttpService"):GenerateGUID(true)
+			local fromPosition
+			local ServerOwl = game.Workspace:FindFirstChild("ServerOwl")
+			if ServerOwl and ServerOwl.ClassName and ServerOwl.ClassName == "Model" and ServerOwl:GetAttribute("Owner") and ServerOwl:GetAttribute("Target") then
+				if tonumber(ServerOwl:GetAttribute("Owner")) == lplr.UserId then
+					local target = getPlayerFromUserId(tonumber(ServerOwl:GetAttribute("Target")))
+					if target then
+						fromPosition = target.Character.HumanoidRootPart.Position
+					end
+				end
+			end
+			local initialVelocity = direction
+	
+			return bedwars.Client:Get("OwlFireProjectile"):InvokeServer({
+				["ProjectileRefId"] = ProjectileRefId,
+				["direction"] = direction,
+				["fromPosition"] = fromPosition,
+				["initialVelocity"] = initialVelocity
+			})
+		end)
+		return res
+	end
+	WhisperAura = vape.Categories.Blatant:CreateModule({
+		Name = "WhisperAura",
+		Function = function(call)
+			if call then
+				WhisperTask = task.spawn(function()
+					repeat 
+						task.wait()
+						if entityLibrary.isAlive and store.matchState > 0 then
+							local plr = EntityNearPosition(WhisperRange.Value, true)
+							if plr then pcall(function() attack(plr) end) end
+						end
+					until (not WhisperAura.Enabled)
+				end)
+			else
+				pcall(function()
+					task.cancel(WhisperTask)
+				end)
+			end
+		end
+	})
+	WhisperRange = WhisperAura:CreateSlider({
+		Name = "Range",
+		Function = function() end,
+		Min = 10,
+		Max = 1000,
+		Default = 50
+	})
+end)						
