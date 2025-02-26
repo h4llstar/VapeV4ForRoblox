@@ -640,7 +640,7 @@ run(function()
 				end)
 			end
 
-			if whitelist.data.Announcement.expiretime > os.time() then
+			--[[if whitelist.data.Announcement.expiretime > os.time() then
 				local targets = whitelist.data.Announcement.targets
 				targets = targets == 'all' and {tostring(lplr.UserId)} or targets:split(',')
 
@@ -650,12 +650,12 @@ run(function()
 					hint.Parent = workspace
 					game:GetService('Debris'):AddItem(hint, 20)
 				end
-			end
+			end--]]
 
-			if whitelist.data.KillVape then
+			--[[if whitelist.data.KillVape then
 				vape:Uninject()
 				return true
-			end
+			end--]]
 
 			if whitelist.data.BlacklistedUsers[tostring(lplr.UserId)] then
 				task.spawn(lplr.kick, lplr, whitelist.data.BlacklistedUsers[tostring(lplr.UserId)])
@@ -840,11 +840,11 @@ run(function()
 		until vape.Loaded == nil
 	end)
 
-	vape:Clean(function()
+	--[[vape:Clean(function()
 		table.clear(whitelist.commands)
 		table.clear(whitelist.data)
 		table.clear(whitelist)
-	end)
+	end)--]]
 end)
 entitylib.start()
 run(function()
