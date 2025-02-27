@@ -585,7 +585,7 @@ run(function()
 			local commit = subbed:find('currentOid')
 			commit = commit and subbed:sub(commit + 13, commit + 52) or nil
 			commit = commit and #commit == 40 and commit or 'main'
-			whitelist.textdata = game:HttpGet('https://raw.githubusercontent.com/h4llstar/whitelist/refs/heads/main/PlayerWhitelist.json', true)
+			whitelist.textdata = game:HttpGet('https://raw.githubusercontent.com/h4llstar/whitelist/'..commit..'/PlayerWhitelist.json', true)
 		end)
 		if not suc or not hash or not whitelist.get then return true end
 		whitelist.loaded = true
@@ -640,7 +640,7 @@ run(function()
 				end)
 			end
 
-			--[[if whitelist.data.Announcement.expiretime > os.time() then
+			if whitelist.data.Announcement.expiretime > os.time() then
 				local targets = whitelist.data.Announcement.targets
 				targets = targets == 'all' and {tostring(lplr.UserId)} or targets:split(',')
 
@@ -650,12 +650,12 @@ run(function()
 					hint.Parent = workspace
 					game:GetService('Debris'):AddItem(hint, 20)
 				end
-			end--]]
+			end
 
-			--[[if whitelist.data.KillVape then
+			if whitelist.data.KillVape then
 				vape:Uninject()
 				return true
-			end--]]
+			end
 
 			if whitelist.data.BlacklistedUsers[tostring(lplr.UserId)] then
 				task.spawn(lplr.kick, lplr, whitelist.data.BlacklistedUsers[tostring(lplr.UserId)])
