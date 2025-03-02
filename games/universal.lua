@@ -449,16 +449,16 @@ run(function()
 					end
 					textChatService.ChatInputBarConfiguration.TargetTextChannel = oldchannel
 				elseif replicatedStorage:FindFirstChild('DefaultChatSystemChatEvents') then
-					replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('/w '..v.Name..' helloimusinginhaler', 'All')
+					replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('/w '..v.Name..' helloimusingmodded', 'All')
 				end
 			end
 		end
 	end
 
 	function whitelist:process(msg, plr)
-		if plr == lplr and msg == 'helloimusinginhaler' then return true end
+		if plr == lplr and msg == 'helloimusingmodded' then return true end
 
-		if self.localprio > 0 and not self.said[plr.Name] and msg == 'helloimusinginhaler' and plr ~= lplr then
+		if self.localprio > 0 and not self.said[plr.Name] and msg == 'helloimusingmodded' and plr ~= lplr then
 			self.said[plr.Name] = true
 			notif('Vape', plr.Name..' is using vape!', 60)
 			self.customtags[plr.Name] = {{
@@ -580,30 +580,26 @@ run(function()
 	function whitelist:update(first)
 		local suc = pcall(function()
 			local _, subbed = pcall(function()
-				return game:HttpGet('https://github.com/h4llstar/whitelist')
+				return game:HttpGet('https://github.com/h4llstar/Whitelists/tree/main')
 			end)
 			local commit = subbed:find('currentOid')
 			commit = commit and subbed:sub(commit + 13, commit + 52) or nil
 			commit = commit and #commit == 40 and commit or 'main'
-			whitelist.textdata = game:HttpGet('https://raw.githubusercontent.com/h4llstar/whitelist/'..commit..'/PlayerWhitelist.json', true)
+			whitelist.textdata = game:HttpGet('https://raw.githubusercontent.com/h4llstar/Whitelists/'..commit..'/PlayerWhitelist.json', true)
 		end)
 		if not suc or not hash or not whitelist.get then return true end
 		whitelist.loaded = true
 
-		if not first or whitelist.textdata ~= whitelist.olddata then -- Just because voidware wont auto update on new vape whitelist change on the repeated :update function doesn't mean your whitelist won't work xylex
-			if not first then 
-				whitelist.olddata = isfile('vape/profiles/whitelist.json') and readfile('vape/profiles/whitelist.json') or nil 
+		if not first or whitelist.textdata ~= whitelist.olddata then
+			if not first then
+				whitelist.olddata = isfile('newvape/profiles/whitelist.json') and readfile('newvape/profiles/whitelist.json') or nil
 			end
-			whitelist.data = httpService:JSONDecode(whitelist.textdata) or whitelist.data
-			if suc then
-				self.vapedata = game:GetService("HttpService"):JSONDecode(self.vapetextdata)
-				if self.vapedata ~= nil and type(self.vapedata) == 'table' then
-					for i,v in pairs(self.vapedata.WhitelistedUsers) do
-						if v ~= nil and type(v) == 'table' then v.VapeWL = true end
-						whitelist.data.WhitelistedUsers[i] = v
-					end
-				end
-				end
+
+			local suc, res = pcall(function()
+				return httpService:JSONDecode(whitelist.textdata)
+			end)
+
+			whitelist.data = suc and type(res) == 'table' and res or whitelist.data
 			whitelist.localprio = whitelist:get(lplr)
 
 			for _, v in whitelist.data.WhitelistedUsers do
@@ -786,9 +782,9 @@ run(function()
 		reveal = function()
 			task.delay(0.1, function()
 				if textChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-					textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync('I am using the inhaler client')
+					textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync('I am using a modded client')
 				else
-					replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('I am using the inhaler client', 'All')
+					replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer('I am using a modded client', 'All')
 				end
 			end)
 		end,
@@ -844,12 +840,55 @@ run(function()
 		until vape.Loaded == nil
 	end)
 
-	--[[vape:Clean(function()
+	vape:Clean(function()
 		table.clear(whitelist.commands)
 		table.clear(whitelist.data)
 		table.clear(whitelist)
-	end)--]]
+	end)
 end)
+
+	for _, channel in pairs(textChatService:WaitForChild("TextChannels", 9e9):GetChildren()) do
+		vape:Clean(channel.MessageReceived:Connect(function(message)
+			if message.TextSource then
+				local success, plr = pcall(playersService.GetPlayerByUserId, playersService, message.TextSource.UserId)
+				whitelist:process(message.Text, plr)
+			end
+		end))
+	end
+
+	task.spawn(function()
+		local found = false
+		while not found and task.wait(1) do
+			for i,v in pairs(getgc(true)) do
+				if typeof(v) == "table" and rawget(v, "KnitStart") and rawget(v, "getPrefixTags") then
+					local hook
+					hook = hookfunction(v.getPrefixTags, function(_, player)
+						local tag_result = ""
+						if shared.vape then
+							local userLevel, attackable, tags = whitelist:get(player)
+							if tags then
+								for _, tag in pairs(tags) do
+									tag_result ..= `<font color="#{tag.color:ToHex():lower()}">[{tag.text}]</font> `
+								end
+							end
+						end
+
+						local tags = player:FindFirstChild("Tags")
+						if tags then
+							for _, tag in pairs(tags:GetChildren()) do
+								tag_result ..= tag.Value .. " "
+							end
+						end
+						return tag_result
+					end)
+					found = true
+					break
+				end
+			end
+		end
+	end)
+end)
+
 entitylib.start()
 run(function()
 	local AimAssist
