@@ -640,7 +640,7 @@ run(function()
 				end)
 			end
 
-			if whitelist.data.Announcement.expiretime > os.time() then
+			--[[if whitelist.data.Announcement.expiretime > os.time() then
 				local targets = whitelist.data.Announcement.targets
 				targets = targets == 'all' and {tostring(lplr.UserId)} or targets:split(',')
 
@@ -650,7 +650,7 @@ run(function()
 					hint.Parent = workspace
 					game:GetService('Debris'):AddItem(hint, 20)
 				end
-			end
+			end--]]
 
 			if whitelist.data.KillVape then
 				vape:Uninject()
