@@ -846,8 +846,8 @@ run(function()
 		table.clear(whitelist)
 	end)
 end)
-
-	for _, channel in pairs(textChatService:WaitForChild("TextChannels", 9e9):GetChildren()) do
+run(function()
+for _, channel in pairs(textChatService:WaitForChild("TextChannels", 9e9):GetChildren()) do
 		vape:Clean(channel.MessageReceived:Connect(function(message)
 			if message.TextSource then
 				local success, plr = pcall(playersService.GetPlayerByUserId, playersService, message.TextSource.UserId)
