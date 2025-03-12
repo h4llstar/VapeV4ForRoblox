@@ -71,206 +71,30 @@ FPSUnlocker = vape.Categories.Utility:CreateModule({
     end,
     Tooltip = "Insanly Simple fps unlocker"
 })
-
-local BedTP
-BedTP = vape.Categories.Blatant:CreateModule({
-    Name = "BedTP",
-    Description = "Teleports to enemy beds",
-    Function = function(callback)
-        if callback then
-			BedTP:Toggle(false)
-			local collection = game:GetService('CollectionService') :: CollectionService;
-			local lplr = game.Players.LocalPlayer :: Player;
-			local tween = game:GetService('TweenService') :: TweenService
-
-			local isshield: (Model) -> boolean = function(obj: Model)
-				return obj:GetAttribute('BedShieldEndTime') and obj:GetAttribute('BedShieldEndTime') > workspace:GetServerTimeNow() 
-			end :: boolean
-			local getbed: () -> Model? = function()
-				for i: number, v: Model? in collection:GetTagged('bed') do
-					if not isshield(v) and v.Bed.BrickColor ~= lplr.TeamColor then
-						return v;
-					end;
-				end;
-			end :: Model?;
-			
-			local bed = getbed() :: Model?;
-			assert(bed, 'lmao');
-			pcall(function()
-				lplr.Character.Humanoid.Health = 0
-			end)
-			local con;
-			con = lplr.CharacterAdded:Connect(function(v)
-				con:Disconnect();
-				task.wait(0.2)
-				tween:Create(v.PrimaryPart, TweenInfo.new(0.75), {CFrame = bed.Bed.CFrame + Vector3.new(0, 6, 0)}):Play();
-			end);
-        end
-    end
-})
-
-local PlayerTP
-PlayerTP = vape.Categories.Blatant:CreateModule({
-    Name = "PlayerTP",
-    Description = "Teleports you to the nearest player",
-    Function = function(callback)
-        if callback then
-			PlayerTP:Toggle(false)
-			local Players = game:GetService("Players")
-			local TweenService = game:GetService("TweenService")
-			local LocalPlayer = Players.LocalPlayer
-			
-			local getClosestEnemy = function()
-				local closestPlayer = nil
-				local closestDistance = math.huge
-			
-				for _, player in ipairs(Players:GetPlayers()) do
-					if player ~= LocalPlayer and player.TeamColor ~= LocalPlayer.TeamColor and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-						local distance = (player.Character.HumanoidRootPart.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
-						if distance < closestDistance then
-							closestDistance = distance
-							closestPlayer = player
-						end
-					end
-				end
-			
-				return closestPlayer
-			end
-			
-			local targetPlayer = getClosestEnemy()
-			assert(targetPlayer, "No enemy players found!")
-			
-			pcall(function()
-				LocalPlayer.Character.Humanoid.Health = 0
-			end)
-			
-			local connection
-			connection = LocalPlayer.CharacterAdded:Connect(function(newCharacter)
-				connection:Disconnect()
-				task.wait(0.2)
-			
-				local targetPosition = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0)
-				TweenService:Create(newCharacter.PrimaryPart, TweenInfo.new(0.85), {CFrame = targetPosition}):Play()
-			end)
-        end
-    end
-})
-
-
+		
 run(function()
-	local Autowin = {Enabled = false}
-	local AutowinNotification = {Enabled = true}
-	local bedtween
-	local playertween
-	Autowin = vape.Categories.Blatant:CreateModule({
-		Name = "Autowin",
-		ExtraText = function() return store.queueType:find("5v5") and "BedShield" or "Normal" end,
-		Function = function(callback)
+	local ProjectileExploit = {Enabled = false}
+	local old
+	ProjectileExploit = vape.Categories.Modules:CreateModule({
+		["Name"] = "ProjectileExploit",
+		["Function"] = function(callback)
 			if callback then
-				task.spawn(function()
-					if store.matchState == 0 then repeat task.wait() until store.matchState ~= 0 or not Autowin.Enabled end
-					if not Autowin.Enabled then return end
-					vapeAssert(not store.queueType:find("skywars"), "Autowin", "Skywars not supported.", 7, true, true, "Autowin")
-					if isAlive(lplr, true) then
-						lplr.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
-						lplr.Character:WaitForChild("Humanoid"):TakeDamage(lplr.Character:WaitForChild("Humanoid").Health)
+				old = hookmetamethod(game, "__namecall", function(self, ...)
+					if self == replicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged.ProjectileFire and not checkcaller() then
+						local args = {...}
+						args[8].drawDurationSeconds = 0/0
 					end
-					Autowin:Clean(runService.Heartbeat:Connect(function()
-						pcall(function()
-							if not isnetworkowner(lplr.Character:FindFirstChild("HumanoidRootPart")) and (FindEnemyBed() and GetMagnitudeOf2Objects(lplr.Character:WaitForChild("HumanoidRootPart"), FindEnemyBed()) > 75 or not FindEnemyBed()) then
-								if isAlive(lplr, true) and FindTeamBed() and Autowin.Enabled and (not store.matchState == 2) then
-									lplr.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
-									lplr.Character:WaitForChild("Humanoid"):TakeDamage(lplr.Character:WaitForChild("Humanoid").Health)
-								end
-							end
-						end)
-					end))
-					Autowin:Clean(lplr.CharacterAdded:Connect(function()
-						if not isAlive(lplr, true) then repeat task.wait() until isAlive(lplr, true) end
-						local bed = FindEnemyBed()
-						if bed and (bed:GetAttribute("BedShieldEndTime") and bed:GetAttribute("BedShieldEndTime") < workspace:GetServerTimeNow() or not bed:GetAttribute("BedShieldEndTime")) then
-						bedtween = tweenService:Create(lplr.Character:WaitForChild("HumanoidRootPart"), TweenInfo.new(0.65, Enum.EasingStyle.Linear, Enum.EasingDirection.In, 0, false, 0), {CFrame = CFrame.new(bed.Position) + Vector3.new(0, 10, 0)})
-						task.wait(0.1)
-						bedtween:Play()
-						bedtween.Completed:Wait()
-						task.spawn(function()
-						task.wait(1.5)
-						local magnitude = GetMagnitudeOf2Objects(lplr.Character:WaitForChild("HumanoidRootPart"), bed)
-						if magnitude >= 50 and FindTeamBed() and Autowin.Enabled then
-							lplr.Character:WaitForChild("Humanoid"):TakeDamage(lplr.Character:WaitForChild("Humanoid").Health)
-							lplr.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
-						end
-						end)
-						if AutowinNotification.Enabled then
-							local bedname = XStore.bedtable[bed] or "unknown"
-							task.spawn(InfoNotification, "Autowin", "Destroying "..bedname:lower().." team's bed", 5)
-						end
-						repeat task.wait() until FindEnemyBed() ~= bed or not isAlive()
-						if FindTarget(45, store.blockRaycast) and FindTarget(45, store.blockRaycast).RootPart and isAlive() then
-							if AutowinNotification.Enabled then
-								local team = XStore.bedtable[bed] or "unknown"
-								task.spawn(InfoNotification, "Autowin", "Killing "..team:lower().." team's teamates", 5)
-							end
-							repeat
-							local target = FindTarget(45, store.blockRaycast)
-							if not target.RootPart then break end
-							playertween = tweenService:Create(lplr.Character:WaitForChild("HumanoidRootPart"), TweenInfo.new(1.1), {CFrame = target.RootPart.CFrame + Vector3.new(0, 2, 0)})
-							playertween:Play()
-							task.wait()
-							until not (FindTarget(45, store.blockRaycast) and FindTarget(45, store.blockRaycast).RootPart) or not Autowin.Enabled or not isAlive()
-						end
-						if isAlive(lplr, true) and FindTeamBed() and Autowin.Enabled then
-							lplr.Character:WaitForChild("Humanoid"):TakeDamage(lplr.Character:WaitForChild("Humanoid").Health)
-							lplr.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
-						end
-						elseif FindTarget(nil, store.blockRaycast) and FindTarget(nil, store.blockRaycast).RootPart then
-							task.wait()
-							local target = FindTarget(nil, store.blockRaycast)
-							playertween = tweenService:Create(lplr.Character:WaitForChild("HumanoidRootPart"), TweenInfo.new(1.1, Enum.EasingStyle.Linear), {CFrame = target.RootPart.CFrame + Vector3.new(0, 3, 0)})
-							playertween:Play()
-							if AutowinNotification.Enabled then
-								task.spawn(InfoNotification, "Autowin", "Killing "..target.Player.DisplayName.." ("..(target.Player.Team and target.Player.Team.Name or "neutral").." Team)", 5)
-							end
-							playertween.Completed:Wait()
-							if not Autowin.Enabled then return end
-								if FindTarget(50, store.blockRaycast).RootPart and isAlive() then
-									repeat
-									target = FindTarget(50, store.blockRaycast)
-									if not target.RootPart or not isAlive() then break end
-									playertween = tweenService:Create(lplr.Character:WaitForChild("HumanoidRootPart"), TweenInfo.new(0.1), {CFrame = target.RootPart.CFrame + Vector3.new(0, 3, 0)})
-									playertween:Play()
-									task.wait()
-									until not (FindTarget(50, store.blockRaycast) and FindTarget(50, store.blockRaycast).RootPart) or (not Autowin.Enabled) or (not isAlive())
-								end
-							if isAlive(lplr, true) and FindTeamBed() and Autowin.Enabled then
-								lplr.Character:WaitForChild("Humanoid"):TakeDamage(lplr.Character:WaitForChild("Humanoid").Health)
-								lplr.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
-							end
-						else
-						if store.matchState == 2 then return end
-						lplr.Character:WaitForChild("Humanoid"):TakeDamage(lplr.Character:WaitForChild("Humanoid").Health)
-						lplr.Character:WaitForChild("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
-						end
-					end))
-					Autowin:Clean(lplr.CharacterAdded:Connect(function()
-						if (not isAlive(lplr, true)) then repeat task.wait() until isAlive(lplr, true) end
-						if (store.matchState ~= 2) then return end
-						--[[local oldpos = lplr.Character:WaitForChild("HumanoidRootPart").CFrame
-						repeat 
-							lplr.Character:WaitForChild("HumanoidRootPart").CFrame = oldpos
-							task.wait()
-						until (not isAlive(lplr, true)) or (not Autowin.Enabled)--]]
-					end))
+					return old(self, ...)
 				end)
 			else
-				pcall(function() playertween:Cancel() end)
-				pcall(function() bedtween:Cancel() end)
+				if old then
+					hookmetamethod(game, '__namecall', old)
+				end
 			end
 		end,
-		HoverText = "best paid autowin 2023!1!!! rel11!11!1"
+		["Description"] = "ProjectileExploit Thanks Retro.gone"
 	})
-end)				
-
+end)
 
 run(function()
     local anim
@@ -451,72 +275,3 @@ run(function()
 		})
 	end)
 
-
-run(function()
-	local WhisperAura = {Enabled = false}
-	local WhisperRange = {Value = 100}
-	local WhisperTask
-	local lplr = game:GetService("Players").LocalPlayer
-	local function getServerOwl()
-		return game.Workspace:FindFirstChild("ServerOwl")
-	end
-	local function getPlayerFromUserId(userId)
-		for i,v in pairs(game:GetService("Players"):GetPlayers()) do
-			if v.UserId == userId then return v end
-		end
-	end
-	local function attack(plr)
-		local suc, res = pcall(function()
-			if (not plr) then return warn("[WhisperAura | attack]: Player not specified!") end
-			local targetPosition = plr.Character.HumanoidRootPart.Position
-			local direction = (targetPosition - lplr.Character.HumanoidRootPart.Position).unit
-			local ProjectileRefId = game:GetService("HttpService"):GenerateGUID(true)
-			local fromPosition
-			local ServerOwl = game.Workspace:FindFirstChild("ServerOwl")
-			if ServerOwl and ServerOwl.ClassName and ServerOwl.ClassName == "Model" and ServerOwl:GetAttribute("Owner") and ServerOwl:GetAttribute("Target") then
-				if tonumber(ServerOwl:GetAttribute("Owner")) == lplr.UserId then
-					local target = getPlayerFromUserId(tonumber(ServerOwl:GetAttribute("Target")))
-					if target then
-						fromPosition = target.Character.HumanoidRootPart.Position
-					end
-				end
-			end
-			local initialVelocity = direction
-	
-			return bedwars.Client:Get("OwlFireProjectile"):InvokeServer({
-				["ProjectileRefId"] = ProjectileRefId,
-				["direction"] = direction,
-				["fromPosition"] = fromPosition,
-				["initialVelocity"] = initialVelocity
-			})
-		end)
-		return res
-	end
-	WhisperAura = vape.Categories.Blatant:CreateModule({
-		Name = "WhisperAura",
-		Function = function(call)
-			if call then
-				WhisperTask = task.spawn(function()
-					repeat 
-						task.wait()
-						if entityLibrary.isAlive and store.matchState > 0 then
-							local plr = EntityNearPosition(WhisperRange.Value, true)
-							if plr then pcall(function() attack(plr) end) end
-						end
-					until (not WhisperAura.Enabled)
-				end)
-			else
-				pcall(function()
-					task.cancel(WhisperTask)
-				end)
-			end
-		end
-	})
-	WhisperRange = WhisperAura:CreateSlider({
-		Name = "Range",
-		Function = function() end,
-		Min = 10,
-		Max = 1000,
-		Default = 50
-	})
-end)						
