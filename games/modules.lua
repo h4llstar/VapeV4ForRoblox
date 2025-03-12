@@ -75,7 +75,7 @@ FPSUnlocker = vape.Categories.Utility:CreateModule({
 run(function()
 	local ProjectileExploit = {Enabled = false}
 	local old
-	ProjectileExploit = vape.Categories.Modules:CreateModule({
+	ProjectileExploit = vape.Categories.Blatant:CreateModule({
 		["Name"] = "ProjectileExploit",
 		["Function"] = function(callback)
 			if callback then
