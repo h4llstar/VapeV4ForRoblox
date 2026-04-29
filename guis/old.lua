@@ -61,8 +61,13 @@ local uipallet = {
 local getcustomassets = {
 	['newvape/assets/old/barlogo.png'] = 'rbxasset://barlogo.png',
 	['newvape/assets/old/blatanticon.png'] = 'rbxasset://blatanticon.png',
+<<<<<<< HEAD
 	['newvape/assets/old/combaticon.png'] = 'rbxasset://combaticon.png',
 	['newvape/assets/old/checkbox.png'] = 'rbxasset://checkbox.png',
+=======
+	['newvape/assets/old/checkbox.png'] = 'rbxasset://checkbox.png',
+	['newvape/assets/old/combaticon.png'] = 'rbxasset://combaticon.png',
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 	['newvape/assets/old/friendsicon.png'] = 'rbxasset://friendsicon.png',
 	['newvape/assets/old/guiicon.png'] = 'rbxasset://guiicon.png',
 	['newvape/assets/old/info.png'] = 'rbxasset://info.png',
@@ -73,8 +78,13 @@ local getcustomassets = {
 	['newvape/assets/old/settingsicon.png'] = 'rbxasset://settingsicon.png',
 	['newvape/assets/old/targetinfoicon.png'] = 'rbxasset://targetinfoicon.png',
 	['newvape/assets/old/textguiicon.png'] = 'rbxasset://textguiicon.png',
+<<<<<<< HEAD
 	['newvape/assets/old/textvape.png'] = 'rbxasset://textvape.png',
 	['newvape/assets/old/textv4.png'] = 'rbxasset://textv4.png',
+=======
+	['newvape/assets/old/textv4.png'] = 'rbxasset://textv4.png',
+	['newvape/assets/old/textvape.png'] = 'rbxasset://textvape.png',
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 	['newvape/assets/old/utilityicon.png'] = 'rbxasset://utilityicon.png',
 	['newvape/assets/old/vape.png'] = 'rbxassetid://14373395239',
 	['newvape/assets/old/worldicon.png'] = 'rbxasset://worldicon.png'
@@ -221,7 +231,11 @@ local function downloadFile(path, func)
 	if not isfile(path) then
 		createDownloader(path)
 		local suc, res = pcall(function()
+<<<<<<< HEAD
 			return game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true)
+=======
+			return game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true)
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		end)
 		if not suc or res == '404: Not Found' then
 			error(res)
@@ -3729,7 +3743,11 @@ topbar:CreateDropdown({
 			if shared.VapeDeveloper then
 				loadstring(readfile('newvape/loader.lua'), 'loader')()
 			else
+<<<<<<< HEAD
 				loadstring(game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+=======
+				loadstring(game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 			end
 		end
 	end,
@@ -3767,7 +3785,11 @@ topbar:CreateButton({
 		if shared.VapeDeveloper then
 			loadstring(readfile('newvape/loader.lua'), 'loader')()
 		else
+<<<<<<< HEAD
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+=======
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		end
 	end,
 	Tooltip = 'This will set your profile to the default settings of Vape'
@@ -3795,8 +3817,12 @@ topbar:CreateButton({
 			MinigamesCategory = 8,
 			LegitCategory = 9,
 			FriendsCategory = 10,
+<<<<<<< HEAD
 			ProfilesCategory = 11,
 			ModulesCategory = 12
+=======
+			ProfilesCategory = 11
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		}
 		local categories = {}
 		for _, v in mainapi.Categories do
@@ -3832,7 +3858,11 @@ topbar:CreateButton({
 		if shared.VapeDeveloper then
 			loadstring(readfile('newvape/loader.lua'), 'loader')()
 		else
+<<<<<<< HEAD
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+=======
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		end
 	end,
 	Tooltip = 'Reloads vape for debugging purposes'

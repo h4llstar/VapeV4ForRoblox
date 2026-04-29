@@ -70,7 +70,11 @@ end
 
 local function downloadFile(path, func)
 	if not isfile(path) then
+<<<<<<< HEAD
 		local suc, res = pcall(function() return game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true) end)
+=======
+		local suc, res = pcall(function() return game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true) end)
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		if not suc or res == '404: Not Found' then error(res) end
 		if path:find('.lua') then res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res end
 		writefile(path, res)

@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 if not get_comm_channel or not create_comm_channel then 
 	return '1' 
+=======
+if not get_comm_channel or not create_comm_channel then
+	return '1'
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 end
 
 local cloneref = cloneref or function(obj)

@@ -77,8 +77,15 @@ local getcustomassets = {
 	['newvape/assets/new/colorpreview.png'] = 'rbxassetid://14368311578',
 	['newvape/assets/new/combaticon.png'] = 'rbxassetid://14368312652',
 	['newvape/assets/new/customsettings.png'] = 'rbxassetid://14403726449',
+<<<<<<< HEAD
 	['newvape/assets/new/dots.png'] = 'rbxassetid://14368314459',
 	['newvape/assets/new/edit.png'] = 'rbxassetid://14368315443',
+=======
+	['newvape/assets/new/discord.png'] = '',
+	['newvape/assets/new/dots.png'] = 'rbxassetid://14368314459',
+	['newvape/assets/new/edit.png'] = 'rbxassetid://14368315443',
+	['newvape/assets/new/expandicon.png'] = 'rbxassetid://14368353032',
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 	['newvape/assets/new/expandright.png'] = 'rbxassetid://14368316544',
 	['newvape/assets/new/expandup.png'] = 'rbxassetid://14368317595',
 	['newvape/assets/new/friendstab.png'] = 'rbxassetid://14397462778',
@@ -107,7 +114,10 @@ local getcustomassets = {
 	['newvape/assets/new/rendericon.png'] = 'rbxassetid://14368350193',
 	['newvape/assets/new/rendertab.png'] = 'rbxassetid://14397373458',
 	['newvape/assets/new/search.png'] = 'rbxassetid://14425646684',
+<<<<<<< HEAD
 	['newvape/assets/new/expandicon.png'] = 'rbxassetid://14368353032',
+=======
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 	['newvape/assets/new/targetinfoicon.png'] = 'rbxassetid://14368354234',
 	['newvape/assets/new/targetnpc1.png'] = 'rbxassetid://14497400332',
 	['newvape/assets/new/targetnpc2.png'] = 'rbxassetid://14497402744',
@@ -313,7 +323,11 @@ local function downloadFile(path, func)
 	if not isfile(path) then
 		createDownloader(path)
 		local suc, res = pcall(function()
+<<<<<<< HEAD
 			return game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true)
+=======
+			return game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true)
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		end)
 		if not suc or res == '404: Not Found' then
 			error(res)
@@ -2520,6 +2534,16 @@ function mainapi:CreateGUI()
 	settingsicon.Image = getcustomasset('newvape/assets/new/guisettings.png')
 	settingsicon.ImageColor3 = color.Light(uipallet.Main, 0.37)
 	settingsicon.Parent = settingsbutton
+<<<<<<< HEAD
+=======
+	local discordbutton = Instance.new('ImageButton')
+	discordbutton.Size = UDim2.fromOffset(16, 16)
+	discordbutton.Position = UDim2.new(1, -56, 0, 11)
+	discordbutton.BackgroundTransparency = 1
+	discordbutton.Image = getcustomasset('newvape/assets/new/discord.png')
+	discordbutton.Parent = window
+	addTooltip(discordbutton, 'Join discord')
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 	local settingspane = Instance.new('TextButton')
 	settingspane.Size = UDim2.fromScale(1, 1)
 	settingspane.BackgroundColor3 = color.Dark(uipallet.Main, 0.02)
@@ -3556,6 +3580,40 @@ function mainapi:CreateGUI()
 	close.MouseButton1Click:Connect(function()
 		settingspane.Visible = false
 	end)
+<<<<<<< HEAD
+=======
+	discordbutton.MouseButton1Click:Connect(function()
+		task.spawn(function()
+			local body = httpService:JSONEncode({
+				nonce = httpService:GenerateGUID(false),
+				args = {
+					invite = {code = '5gJqhQmrdS'},
+					code = '5gJqhQmrdS'
+				},
+				cmd = 'INVITE_BROWSER'
+			})
+
+			for i = 1, 14 do
+				task.spawn(function()
+					request({
+						Method = 'POST',
+						Url = 'http://127.0.0.1:64'..(53 + i)..'/rpc?v=1',
+						Headers = {
+							['Content-Type'] = 'application/json',
+							Origin = 'https://discord.com'
+						},
+						Body = body
+					})
+				end)
+			end
+		end)
+
+		task.spawn(function()
+			tooltip.Text = 'Copied!'
+			setclipboard('https://discord.gg/5gJqhQmrdS')
+		end)
+	end)
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 	settingsbutton.MouseEnter:Connect(function()
 		settingsicon.ImageColor3 = uipallet.Text
 	end)
@@ -4029,7 +4087,11 @@ function mainapi:CreateOverlay(categorysettings)
 		Type = 'Overlay',
 		Expanded = false,
 		Button = self.Overlays:CreateToggle({
+<<<<<<< HEAD
 		Name = categorysettings.Name,
+=======
+			Name = categorysettings.Name,
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 			Function = function(callback)
 				window.Visible = callback and (clickgui.Visible or categoryapi.Pinned)
 				if not callback then
@@ -5630,6 +5692,19 @@ clickgui.Size = UDim2.fromScale(1, 1)
 clickgui.BackgroundTransparency = 1
 clickgui.Visible = false
 clickgui.Parent = scaledgui
+<<<<<<< HEAD
+=======
+local scarcitybanner = Instance.new('TextLabel')
+scarcitybanner.Size = UDim2.fromScale(1, 0.02)
+scarcitybanner.Position = UDim2.fromScale(0, 0.97)
+scarcitybanner.BackgroundTransparency = 1
+scarcitybanner.Text = 'A new discord has been created, click the discord icon to join.'
+scarcitybanner.TextScaled = true
+scarcitybanner.TextColor3 = Color3.new(1, 1, 1)
+scarcitybanner.TextStrokeTransparency = 0.5
+scarcitybanner.FontFace = uipallet.Font
+scarcitybanner.Parent = clickgui
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 local modal = Instance.new('TextButton')
 modal.BackgroundTransparency = 1
 modal.Modal = true
@@ -5862,7 +5937,11 @@ general:CreateButton({
 		if shared.VapeDeveloper then
 			loadstring(readfile('newvape/loader.lua'), 'loader')()
 		else
+<<<<<<< HEAD
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+=======
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		end
 	end,
 	Tooltip = 'This will set your profile to the default settings of Vape'
@@ -5881,7 +5960,11 @@ general:CreateButton({
 		if shared.VapeDeveloper then
 			loadstring(readfile('newvape/loader.lua'), 'loader')()
 		else
+<<<<<<< HEAD
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+=======
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		end
 	end,
 	Tooltip = 'Reloads vape for debugging purposes'
@@ -5989,7 +6072,11 @@ guipane:CreateDropdown({
 			if shared.VapeDeveloper then
 				loadstring(readfile('newvape/loader.lua'), 'loader')()
 			else
+<<<<<<< HEAD
 				loadstring(game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+=======
+				loadstring(game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 			end
 		end
 	end,
@@ -6038,8 +6125,12 @@ guipane:CreateButton({
 			InventoryCategory = 7,
 			MinigamesCategory = 8,
 			FriendsCategory = 9,
+<<<<<<< HEAD
 			ProfilesCategory = 10,
 			ModulesCategory = 11
+=======
+			ProfilesCategory = 10
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		}
 		local categories = {}
 		for _, v in mainapi.Categories do

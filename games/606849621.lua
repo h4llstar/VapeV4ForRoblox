@@ -9,7 +9,11 @@ local isfile = isfile or function(file)
 end
 local function downloadFile(path, func)
 	if not isfile(path) then
+<<<<<<< HEAD
 		local suc, res = pcall(function() return game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true) end)
+=======
+		local suc, res = pcall(function() return game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true) end)
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		if not suc or res == '404: Not Found' then error(res) end
 		if path:find('.lua') then res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res end
 		writefile(path, res)
@@ -285,7 +289,11 @@ run(function()
 		Draw = 'TaseReplicate',
 		Gun = 'PopTires',
 		LocalScript2 = 'LookAngle',
+<<<<<<< HEAD
 		LocomotiveFront = 'SelfDamage',
+=======
+		LocalScript = 'SelfDamage',
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		onPressed = 'FlipVehicle',
 		OnJump = 'GetOut',
 		OnJump1 = 'GetOut',
@@ -742,11 +750,18 @@ run(function()
 end)
 	
 run(function()
+<<<<<<< HEAD
 	local InfiniteNitro
 	local nitrotable = debug.getupvalue(jb.VehicleController.NitroShopVisible, 1)
 	local oldnitro
 	
 	InfiniteNitro = vape.Categories.Utility:CreateModule({
+=======
+	local nitrotable = debug.getupvalue(jb.VehicleController.NitroShopVisible, 1)
+	local oldnitro
+	
+	InfNitro = vape.Categories.Utility:CreateModule({
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		Name = 'InfiniteNitro',
 		Function = function(callback)
 			if callback then
@@ -755,7 +770,11 @@ run(function()
 				repeat
 					nitrotable.Nitro = 250
 					task.wait(0.1)
+<<<<<<< HEAD
 				until not InfiniteNitro.Enabled
+=======
+				until not InfNitro.Enabled
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 			else
 				nitrotable.Nitro = oldnitro
 				jb.VehicleController.updateSpdBarRatio(oldnitro / 250)
@@ -790,4 +809,8 @@ run(function()
 		Tooltip = 'Enables most doors to be walked through'
 	})
 end)
+<<<<<<< HEAD
 	
+=======
+	
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052

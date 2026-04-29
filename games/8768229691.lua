@@ -305,8 +305,13 @@ run(function()
 	local roactCheck = replicatedStorage['rbxts_include']['node_modules']['@rbxts']:FindFirstChild('roact')
 	skywars = setmetatable({
 		CameraUtil = require(lplr.PlayerScripts.TS.util['camera-util']).CameraUtil,
+<<<<<<< HEAD
 		FireOrigin = debug.getupvalue(ControllerTable.ProjectileController.chargeBow, 10).ORIGIN_OFFSET,
 		Gravity = debug.getupvalue(ControllerTable.ProjectileController.chargeBow, 12).WORLD_ACCELERATION.Y,
+=======
+		FireOrigin = debug.getupvalue(ControllerTable.ProjectileController.chargeBow, 11).ORIGIN_OFFSET,
+		Gravity = debug.getupvalue(ControllerTable.ProjectileController.chargeBow, 13).WORLD_ACCELERATION.Y,
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		ItemMeta = debug.getupvalue(ControllerTable.HotbarController.getSword, 1),
 		Remotes = debug.getupvalue(ControllerTable.MeleeController.strikeDesktop, 6),
 		Roact = require(roactCheck and roactCheck.src or replicatedStorage['rbxts_include']['node_modules']['@rbxts'].ReactLua['node_modules']['@jsdotlua']['roact-compat']),
@@ -864,6 +869,7 @@ run(function()
 		Max = 10,
 		Default = 10
 	})
+<<<<<<< HEAD
 	Killaura:CreateToggle({
 		Name = 'KillauraVisualizer',
 		Function = function(callback)
@@ -910,6 +916,8 @@ run(function()
 			end
 		end
 	})
+=======
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 	Mouse = Killaura:CreateToggle({Name = 'Require mouse down'})
 	Swing = Killaura:CreateToggle({Name = 'No Swing'})
 	Killaura:CreateToggle({

@@ -15,11 +15,7 @@ end
 local function downloadFile(path, func)
 	if not isfile(path) then
 		local suc, res = pcall(function()
-<<<<<<< HEAD
-			return game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true)
-=======
 			return game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true)
->>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		end)
 		if not suc or res == '404: Not Found' then
 			error(res)
@@ -32,24 +28,16 @@ local function downloadFile(path, func)
 	return (func or readfile)(path)
 end
 
-vape.Place = 8768229691
+vape.Place = 5938036553
 if isfile('newvape/games/'..vape.Place..'.lua') then
-	loadstring(readfile('newvape/games/'..vape.Place..'.lua'), 'skywars')()
+	loadstring(readfile('newvape/games/'..vape.Place..'.lua'), 'bedwars')()
 else
 	if not shared.VapeDeveloper then
 		local suc, res = pcall(function()
-<<<<<<< HEAD
-			return game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/games/'..vape.Place..'.lua', true)
-=======
 			return game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/games/'..vape.Place..'.lua', true)
->>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		end)
 		if suc and res ~= '404: Not Found' then
-			loadstring(downloadFile('newvape/games/'..vape.Place..'.lua'), 'skywars')()
+			loadstring(downloadFile('newvape/games/'..vape.Place..'.lua'), 'bedwars')()
 		end
 	end
-<<<<<<< HEAD
 end
-=======
-end
->>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052

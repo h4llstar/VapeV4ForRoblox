@@ -23,7 +23,11 @@ run(function()
 
 	local KnitInit, Knit
 	repeat
+<<<<<<< HEAD
 		KnitInit, Knit = pcall(function() return debug.getupvalue(require(lplr.PlayerScripts.TS.knit).setup, 6) end)
+=======
+		KnitInit, Knit = pcall(function() return debug.getupvalue(require(lplr.PlayerScripts.TS.knit).setup, 9) end)
+>>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 		if KnitInit then break end
 		task.wait()
 	until KnitInit
