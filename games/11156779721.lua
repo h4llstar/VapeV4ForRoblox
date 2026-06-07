@@ -280,7 +280,6 @@ run(function()
 		Max = 10,
 		Default = 10
 	})
-<<<<<<< HEAD
 	Killaura:CreateToggle({
 		Name = 'KillauraVisualizer',
 		Function = function(callback)
@@ -327,8 +326,6 @@ run(function()
 			end
 		end
 	})
-=======
->>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 	Mouse = Killaura:CreateToggle({Name = 'Require mouse down'})
 	Killaura:CreateToggle({
 		Name = 'Show target',
