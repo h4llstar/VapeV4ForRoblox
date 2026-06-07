@@ -69,11 +69,7 @@ local function finishLoading()
 				if shared.VapeDeveloper then
 					loadstring(readfile('newvape/loader.lua'), 'loader')()
 				else
-<<<<<<< HEAD
 					loadstring(game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
-=======
-					loadstring(game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
->>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 				end
 			]]
 			if shared.VapeDeveloper then
@@ -108,20 +104,13 @@ shared.vape = vape
 
 if not shared.VapeIndependent then
 	loadstring(downloadFile('newvape/games/universal.lua'), 'universal')()
-<<<<<<< HEAD
 	loadstring(downloadFile('newvape/games/modules.lua'), 'modules')()
-=======
->>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 	if isfile('newvape/games/'..game.PlaceId..'.lua') then
 		loadstring(readfile('newvape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
 	else
 		if not shared.VapeDeveloper then
 			local suc, res = pcall(function()
-<<<<<<< HEAD
 				return game:HttpGet('https://raw.githubusercontent.com/h4llstar/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/games/'..game.PlaceId..'.lua', true)
-=======
-				return game:HttpGet('https://raw.githubusercontent.com/qyroke2/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/games/'..game.PlaceId..'.lua', true)
->>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 			end)
 			if suc and res ~= '404: Not Found' then
 				loadstring(downloadFile('newvape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)
