@@ -42,11 +42,7 @@ end
 
 if not shared.VapeDeveloper then
 	local _, subbed = pcall(function()
-<<<<<<< HEAD
 		return game:HttpGet('https://github.com/h4llstar/VapeV4ForRoblox')
-=======
-		return game:HttpGet('https://github.com/qyroke2/VapeV4ForRoblox')
->>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
 	end)
 	local commit = subbed:find('currentOid')
 	commit = commit and subbed:sub(commit + 13, commit + 52) or nil
@@ -60,8 +56,4 @@ if not shared.VapeDeveloper then
 	writefile('newvape/profiles/commit.txt', commit)
 end
 
-<<<<<<< HEAD
 return loadstring(downloadFile('newvape/main.lua'), 'main')()
-=======
-return loadstring(downloadFile('newvape/main.lua'), 'main')()
->>>>>>> 8e8603dd015281f0a2fdf99afacf1b0ddb33d052
